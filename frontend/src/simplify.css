@@ -1,0 +1,19 @@
+/* Keep the home screen focused on the next useful action. */
+.stat-grid:has(+ .dashboard-grid) { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.stat-grid:has(+ .dashboard-grid) > .stat-card:nth-child(4) { display: none; }
+.dashboard-actions > .btn-primary-custom { display: none; }
+.progress-panel .progress-illustration { display: none; }
+.progress-panel .progress-empty { height: auto; min-height: 150px; padding: 24px 4px 5px; }
+.focus-panel .focus-row:has(.mini-icon.peach) { display: none; }
+.flashcard-summary:not(.flashcard-summary-simple) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.flashcard-summary:not(.flashcard-summary-simple) > .panel:nth-child(3) { display: none; }
+
+@media (max-width: 850px) {
+  .stat-grid:has(+ .dashboard-grid) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 560px) {
+  .stat-grid:has(+ .dashboard-grid) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .progress-panel .progress-empty { min-height: 130px; }
+  .flashcard-summary:not(.flashcard-summary-simple) > .panel { padding: 14px; }
+}

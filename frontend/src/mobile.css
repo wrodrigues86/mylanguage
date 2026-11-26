@@ -1,0 +1,5 @@
+@media (max-width: 560px) {
+  .side-scroll { overflow-x: auto; }
+  .nav-group + .nav-group { display: flex; }
+  .nav-link, .nav-link.active { width: 43px; }
+}

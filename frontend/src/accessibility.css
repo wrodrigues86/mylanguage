@@ -1,0 +1,67 @@
+:focus-visible {
+  outline: 3px solid #246f49 !important;
+  outline-offset: 3px;
+}
+
+.skip-link {
+  position: fixed;
+  top: 8px;
+  left: 8px;
+  z-index: 100;
+  transform: translateY(-160%);
+  background: #173f2b;
+  color: #fff;
+  padding: 12px 16px;
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.skip-link:focus { transform: translateY(0); color: #fff; }
+.logout-button {
+  min-height: 40px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: var(--surface);
+  color: var(--text);
+  padding: 0 13px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+}
+.logout-button:hover { background: var(--surface-2); }
+.nav-link:focus-visible, .btn-primary-custom:focus-visible, .btn-soft:focus-visible { outline-offset: 2px; }
+.toast-note { font-size: 14px; }
+.error-box { font-size: 14px; }
+.modal-card:focus { outline: none; }
+.dashboard-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.sidebar > .profile { margin: 14px 2px 0; padding: 12px 8px; border: 1px solid var(--line); border-radius: 9px; background: var(--surface-2); }
+.sidebar > .side-scroll { padding-top: 23px; }
+.sidebar .profile-copy strong { overflow-wrap: anywhere; }
+.onboarding-field-help { display: block; margin-top: 6px; color: #687166; font-size: 12px; font-weight: 400; }
+.nav-link { min-height: 44px; }
+.icon-button { min-width: 44px; min-height: 44px; }
+.filter-select { min-height: 44px; }
+.btn-primary-custom, .btn-soft { min-height: 44px; }
+.eyebrow, .auth-kicker, .nav-label { color: #657064; }
+.page-head p, .today-label, .breadcrumbs, .stat-foot, .language-caption,
+.collection-card p, .collection-foot, .flashcard-summary small, .stats-note p,
+.auth-sub, .auth-security span { color: #687166; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@media (max-width: 560px) {
+  .dashboard-actions { width: 100%; }
+  .dashboard-actions > button { flex: 1; padding-inline: 10px; gap: 8px; }
+  .nav-link, .nav-link.active { min-height: 44px; }
+  .icon-button { min-width: 44px; min-height: 44px; }
+}

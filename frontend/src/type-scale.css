@@ -1,0 +1,64 @@
+/* Readable type scale for navigation, supporting copy, and form controls. */
+body { font-size: 16px; }
+.nav-label { font-size: 11px; }
+.nav-link { font-size: 14px; }
+.nav-glyph { font-size: 19px; }
+.today-label, .breadcrumbs { font-size: 13px; }
+.page-head p { font-size: 15px; }
+.eyebrow, .auth-kicker { font-size: 11px; }
+.stat-top { font-size: 13px; }
+.stat-foot { font-size: 13px; }
+.stat-value { font-size: 30px; }
+.panel-heading h2 { font-size: 18px; }
+.period-pill { font-size: 10px; }
+.progress-empty > strong { font-size: 15px; }
+.progress-empty > p { font-size: 14px; }
+.text-link { font-size: 14px; }
+.focus-number { font-size: 36px; }
+.focus-number span { font-size: 14px; }
+.focus-caption, .focus-row { font-size: 14px; }
+.activity-row { font-size: 14px; }
+.library-meta { font-size: 14px; }
+.search-box input { font-size: 15px; }
+.filter-select { font-size: 14px; }
+.learning-kind { font-size: 10px; }
+.learning-main h3 { font-size: 19px; }
+.learning-main > p { font-size: 15px; }
+.learning-example { font-size: 14px; }
+.empty-state h2 { font-size: 18px; }
+.empty-state p { font-size: 15px; }
+.language-level { font-size: 10px; }
+.language-card h2 { font-size: 19px; }
+.language-caption { font-size: 13px; }
+.collection-card h3 { font-size: 16px; }
+.collection-card p, .collection-foot { font-size: 13px; }
+.review-banner h2 { font-size: 19px; }
+.review-banner p { font-size: 14px; }
+.flashcard-summary strong { font-size: 27px; }
+.flashcard-summary small { font-size: 13px; }
+.flashcard-row { font-size: 14px; }
+.due-badge { font-size: 11px; }
+.stats-note h3 { font-size: 15px; }
+.stats-note p { font-size: 14px; }
+.modal-head h3 { font-size: 19px; }
+.modal-field { font-size: 14px; }
+.form-control, .form-select { font-size: 15px; }
+.auth-hero > p { font-size: 15px; }
+.hero-meaning { font-size: 12px; }
+.auth-sub { font-size: 15px; }
+.auth-form-wrap form > label { font-size: 14px; }
+.auth-switch { font-size: 14px; }
+.auth-switch button { font-size: 14px; }
+.auth-security span { font-size: 13px; }
+
+@media (max-width: 560px) {
+  .nav-link, .nav-link.active { font-size: 0 !important; }
+  .nav-glyph, .nav-link.active .nav-glyph { font-size: 18px; }
+  .page-head p { font-size: 14px; }
+  .collection-card h3 { font-size: 14px; }
+  .collection-card p, .collection-foot { font-size: 12px; }
+  .flashcard-row { font-size: 12px; }
+  .activity-row { font-size: 12px; }
+  .learning-main > p { font-size: 14px; }
+  .search-box input, .filter-select { font-size: 14px; }
+}
