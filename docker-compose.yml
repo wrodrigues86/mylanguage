@@ -1,4 +1,3 @@
-
 services:
   backend:
     build:
@@ -9,18 +8,13 @@ services:
       PORT: 3001
       DATABASE_PATH: /app/data/mylingua.db
       FRONTEND_URL: http://localhost:8081
-
-      # Credenciais temporárias para teste
-      JWT_SECRET: "TESTE_JWT_CHAVE_12345678901234567890"
-      ADMIN_NAME: "Admin"
-      ADMIN_EMAIL: "master@example.com"
-      ADMIN_PASSWORD: "MyLingua_Admin_2026_Senha_Segura_123"
-
+      JWT_SECRET: ${JWT_SECRET}
+      ADMIN_NAME: ${ADMIN_NAME}
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
     volumes:
       - mylingua-data:/app/data
-
     restart: unless-stopped
-
     healthcheck:
       test:
         - CMD
@@ -30,7 +24,6 @@ services:
       interval: 30s
       timeout: 5s
       retries: 5
-      start_period: 15s
 
   frontend:
     build:
@@ -38,14 +31,11 @@ services:
       dockerfile: frontend/Dockerfile
       args:
         VITE_API_URL: /api
-
     ports:
       - "8081:80"
-
     depends_on:
       backend:
         condition: service_healthy
-
     restart: unless-stopped
 
 volumes:
