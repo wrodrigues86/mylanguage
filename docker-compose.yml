@@ -8,10 +8,10 @@ services:
       PORT: 3001
       DATABASE_PATH: /app/data/mylingua.db
       FRONTEND_URL: http://localhost:8081
-      JWT_SECRET: ${JWT_SECRET}
-      ADMIN_NAME: ${ADMIN_NAME}
-      ADMIN_EMAIL: ${ADMIN_EMAIL}
-      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      JWT_SECRET: QV30eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn0.KMUFsIDTnFmyG3nMiGM6H9FNFUROf3wh7SmqJp-
+      ADMIN_NAME: MyLingua Master Admin
+      ADMIN_EMAIL: master@example.com
+      ADMIN_PASSWORD: MyL!ngua#2026@Admin$X9pQ7z
     volumes:
       - mylingua-data:/app/data
     restart: unless-stopped
