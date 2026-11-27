@@ -1,6 +1,7 @@
 import { db } from '../database/db.js';
 
 export const settingDefinitions = {
+  site_name: { type: 'text', fallback: 'MyLingua', maxLength: 40 },
   registration_open: { type: 'boolean', fallback: true },
   study_audio_enabled: { type: 'boolean', fallback: true },
   maintenance_mode: { type: 'boolean', fallback: false },
@@ -12,6 +13,7 @@ export const settingDefinitions = {
 function read(key) {
   const definition = settingDefinitions[key];
   const raw = db.prepare('SELECT value FROM app_settings WHERE key=?').get(key)?.value;
+  if (definition.type === 'text') return typeof raw === 'string' && raw.trim() ? raw.trim() : definition.fallback;
   if (definition.type === 'boolean') return raw === undefined ? definition.fallback : raw === 'true';
   const value = Number(raw);
   return definition.values.includes(value) ? value : definition.fallback;
@@ -20,6 +22,7 @@ function read(key) {
 export const settingsRepository = {
   publicSettings() {
     return {
+      siteName: read('site_name'),
       registrationOpen: read('registration_open'),
       studyAudioEnabled: read('study_audio_enabled'),
       maintenanceMode: read('maintenance_mode'),
@@ -30,7 +33,8 @@ export const settingsRepository = {
   },
   adminSettings() { return Object.fromEntries(Object.keys(settingDefinitions).map(key => [key, read(key)])); },
   update(key, value, adminId) {
-    const stored = settingDefinitions[key].type === 'boolean' ? String(value) : String(Number(value));
+    const definition = settingDefinitions[key];
+    const stored = definition.type === 'boolean' ? String(value) : definition.type === 'text' ? String(value).trim() : String(Number(value));
     db.prepare(`INSERT INTO app_settings(key,value,updated_at,updated_by) VALUES(?,?,CURRENT_TIMESTAMP,?)
       ON CONFLICT(key) DO UPDATE SET value=excluded.value,updated_at=CURRENT_TIMESTAMP,updated_by=excluded.updated_by`)
       .run(key, stored, adminId);

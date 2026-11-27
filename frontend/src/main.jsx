@@ -16,6 +16,7 @@ import './admin.css';
 import './admin-settings.css';
 import './profile.css';
 import './assistant.css';
+import './assistant-mobile.css';
 import App from './App.jsx';
 
 if ('serviceWorker' in navigator) window.addEventListener('load', async () => {

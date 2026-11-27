@@ -1,0 +1,11 @@
+.announcement-banner{position:relative;overflow:hidden;width:100%;aspect-ratio:5.5/1;min-height:126px;max-height:210px;margin:0 0 22px;border:1px solid var(--line);border-radius:12px;background:var(--surface-2);box-shadow:0 5px 18px #273b2c0a}
+.announcement-banner-image{display:block;width:100%;height:100%;object-fit:cover;object-position:center}
+.announcement-banner-controls{position:absolute;right:12px;bottom:11px;display:flex;align-items:center;gap:9px;padding:6px 8px;border:1px solid #ffffff9c;border-radius:9px;background:#f9fbf2d9;backdrop-filter:blur(8px)}
+.announcement-banner-arrows{display:flex;gap:5px}
+.announcement-banner-arrows button{display:grid;place-items:center;width:28px;height:28px;padding:0;border:1px solid #d7e1d6;border-radius:50%;background:#fff;color:#355c45}
+.announcement-banner-arrows button:hover{background:#eaf3ec}
+.announcement-banner-arrows svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.announcement-banner-dots{display:flex;align-items:center;gap:5px;padding:0 2px}
+.announcement-banner-dots button{width:7px;height:7px;padding:0;border:0;border-radius:50%;background:#aab8aa}
+.announcement-banner-dots button[aria-current=true]{width:18px;border-radius:5px;background:#4d8060}
+@media(max-width:700px){.announcement-banner{aspect-ratio:2.8/1;min-height:118px;max-height:220px;margin-bottom:17px;border-radius:10px}.announcement-banner-controls{right:8px;bottom:8px;gap:6px;padding:5px 6px}.announcement-banner-arrows button{width:25px;height:25px}}

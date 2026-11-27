@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
+import StudyCard from './StudyCard.jsx';
 
 const api = axios.create({ baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3001/api' });
 api.interceptors.request.use(config => {
@@ -23,6 +24,7 @@ function languageForText(text, fallback) {
 
 export default function Study() {
   const [cards, setCards] = useState([]), [languages, setLanguages] = useState([]);
+  const [userLanguage, setUserLanguage] = useState(() => navigator.language || 'pt-BR');
   const [selectedLanguageId, setSelectedLanguageId] = useState(null);
   const [loading, setLoading] = useState(true), [error, setError] = useState('');
   const [audioEnabled, setAudioEnabled] = useState(true);
@@ -33,8 +35,8 @@ export default function Study() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    Promise.all([api.get('/flashcards'), api.get('/languages'), api.get('/settings/public'), api.get('/study/progress')])
-      .then(([cardResult, languageResult, settingsResult, progressResult]) => { setCards(cardResult.data); setLanguages(languageResult.data); setAudioEnabled(settingsResult.data.studyAudioEnabled); setDailyProgress(progressResult.data); })
+    Promise.all([api.get('/flashcards'), api.get('/languages'), api.get('/settings/public'), api.get('/study/progress'), api.get('/me')])
+      .then(([cardResult, languageResult, settingsResult, progressResult, profileResult]) => { setCards(cardResult.data); setLanguages(languageResult.data); setAudioEnabled(settingsResult.data.studyAudioEnabled); setDailyProgress(progressResult.data); setUserLanguage(profileResult.data.preferred_language || navigator.language || 'pt-BR'); })
       .catch(err => setError(err.response?.data?.error || 'Não foi possível carregar os dados de estudo.'))
       .finally(() => setLoading(false));
     return () => window.speechSynthesis?.cancel();
@@ -78,7 +80,7 @@ export default function Study() {
     return () => window.removeEventListener('keydown', onKeyDown);
   }, [card, revealed, saving]);
 
-  function speak(text, preferredLanguage) {
+  function speak(text, preferredLanguage, detectScript = false) {
     if (!audioEnabled || !text?.trim()) return;
     if (!('speechSynthesis' in window)) { setMessage('A reprodução de voz não está disponível neste navegador.'); return; }
     window.speechSynthesis.cancel();
@@ -86,7 +88,7 @@ export default function Study() {
     const utterance = new SpeechSynthesisUtterance(text);
     const name = (card?.language_name || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
     const targetLanguage = card?.language_code || voiceByLanguage[name] || navigator.language || 'pt-BR';
-    utterance.lang = languageForText(text, preferredLanguage || targetLanguage);
+    utterance.lang = detectScript ? languageForText(text, preferredLanguage || targetLanguage) : preferredLanguage || targetLanguage;
     utterance.rate = speechRate;
     utterance.onstart = () => setAudioPlaying(true);
     utterance.onend = () => setAudioPlaying(false);
@@ -121,7 +123,7 @@ export default function Study() {
     </main> : card ? <main className="study-content" aria-labelledby="study-title">
       <div className="study-progress-head"><div><div className="eyebrow">SESSÃO DE {selectedName?.toUpperCase()}</div><h1 id="study-title">Hora de lembrar.</h1></div><div className="study-count"><strong>{reviewedCount + 1}</strong><span> / {sessionTotal}</span></div></div>
       <div className="study-progress-track" role="progressbar" aria-label={`Progresso da sessão de ${selectedName}`} aria-valuemin="0" aria-valuemax={sessionTotal} aria-valuenow={reviewedCount}><span style={{width:`${sessionTotal ? (reviewedCount/sessionTotal)*100 : 0}%`}}/></div>
-    <article className="study-card" aria-live="polite"><div className="study-card-top"><span>{revealed ? 'RESPOSTA' : 'FRENTE DO CARTÃO'}</span><span>{card.learning_title ? 'BIBLIOTECA' : 'FLASHCARD'}</span></div><div className="study-card-content"><p className="study-prompt">{revealed ? card.back : card.front}</p>{revealed && card.learning_example && <p className="study-example">“{card.learning_example}”</p>}</div>{audioEnabled ? <div className="study-audio-row"><div className="study-audio-buttons"><button className="study-audio" onClick={() => speak(revealed ? card.back : card.front)}><span aria-hidden="true">◖))</span> Ouvir {revealed ? 'resposta' : 'frase'}</button>{revealed && card.learning_example && <button className="study-audio" onClick={() => speak(card.learning_example)}><span aria-hidden="true">◖))</span> Ouvir frase de exemplo</button>}{audioPlaying && <button className="study-audio study-audio-stop" onClick={stopSpeech}>Parar áudio</button>}</div><label className="study-speed-control" htmlFor="study-speed"><span>Velocidade do áudio</span><input id="study-speed" type="range" min="0.55" max="1.25" step="0.05" value={speechRate} onChange={event => setSpeechRate(Number(event.target.value))}/><output htmlFor="study-speed">{speechRate.toFixed(2)}×</output></label></div> : <p className="study-audio-disabled">O áudio está desativado nas configurações da aplicação.</p>}</article>
+    <StudyCard card={card} revealed={revealed} audioEnabled={audioEnabled} audioPlaying={audioPlaying} speechRate={speechRate} setSpeechRate={setSpeechRate} speak={speak} stopSpeech={stopSpeech} userLanguage={userLanguage}/> 
       {!revealed ? <button className="btn-primary-custom study-reveal" onClick={() => setRevealed(true)}>Revelar resposta <span aria-hidden="true">↓</span></button> : <section className="study-rating" aria-label="Avalie a dificuldade deste cartão"><h2>Como foi?</h2><p>Seu intervalo será ajustado com base nesta resposta.</p><div className="study-rating-grid">{[['Errei',0,'1 dia','rating-again','1'],['Difícil',3,'curto','rating-hard','2'],['Bom',4,'intervalo normal','rating-good','3'],['Fácil',5,'intervalo maior','rating-easy','4']].map(([label,quality,hint,tone,key])=><button key={label} className={`study-rating-button ${tone}`} onClick={() => review(Number(quality))} disabled={saving}><strong>{label}</strong><small>{hint}</small><kbd>{key}</kbd></button>)}</div></section>}
       <div className="study-help">A repetição espaçada usa suas respostas para escolher quando mostrar cada cartão novamente. Atalhos: espaço revela; 1 a 4 avaliam.</div>
     </main> : <main className="study-empty" aria-labelledby="study-title"><div className="study-empty-mark" aria-hidden="true">✳</div><div className="eyebrow">{reviewedCount ? 'SESSÃO CONCLUÍDA' : 'SEU ESTUDO'}</div><h1 id="study-title">{dailyProgress.remaining === 0 ? 'Limite diario atingido.' : reviewedCount ? 'Sessao concluida.' : selectedCards.length ? 'Tudo em dia por agora.' : 'Nenhum cartao neste idioma ainda.'}</h1><p>{dailyProgress.remaining === 0 ? 'Voce chegou ao limite diario de revisoes. Ele sera renovado amanha.' : reviewedCount ? 'Os intervalos foram atualizados. Você revisou apenas cartões de ' + selectedName + '.' : selectedCards.length ? `Os próximos cartões de ${selectedName} aparecerão aqui quando chegar a hora de revisar.` : `Crie ou associe flashcards a ${selectedName} para estudar este idioma.`}</p><div className="study-empty-actions"><button className="btn-soft" onClick={chooseAnotherLanguage}>Escolher outro idioma</button><Link to="/cards" className="btn-primary-custom">Ver flashcards <span aria-hidden="true">→</span></Link><Link to="/library" className="btn-soft">Abrir biblioteca</Link></div></main>}

@@ -5,7 +5,7 @@ export function auth(req, res, next) {
   if (!token) return res.status(401).json({ error: 'Faça login para continuar.' });
   try {
     const claims = jwt.verify(token, process.env.JWT_SECRET);
-    const user = db.prepare('SELECT id,name,email,role,active,created_at FROM users WHERE id=?').get(claims.id);
+    const user = db.prepare('SELECT id,name,email,role,active,preferred_language,avatar_data,created_at FROM users WHERE id=?').get(claims.id);
     if (!user) return res.status(401).json({ error: 'Sessão inválida. Entre novamente.' });
     if (!user.active) return res.status(401).json({ error: 'Esta conta está desativada.' });
     req.user = user;

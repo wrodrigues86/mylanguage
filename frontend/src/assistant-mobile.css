@@ -1,0 +1,7 @@
+ .assistant-launcher-icon{display:inline-grid;width:22px;height:22px;flex:none;place-items:center}
+ .assistant-launcher-icon svg{display:block;width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+@media(max-width:560px){
+  .assistant-launcher{right:max(12px,env(safe-area-inset-right));bottom:calc(18px + env(safe-area-inset-bottom));max-width:calc(100vw - 24px);min-height:50px;padding:0 14px}
+  .assistant-launcher-label{white-space:nowrap}
+  .assistant-chat{right:max(12px,env(safe-area-inset-right));bottom:calc(76px + env(safe-area-inset-bottom));width:min(390px,calc(100vw - 24px));height:min(560px,calc(100dvh - 94px));max-height:calc(100dvh - 94px)}
+}

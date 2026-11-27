@@ -27,4 +27,19 @@ export const adminController = {
     try { return res.json(adminService.updateSetting(req.user.id, req.params.key, req.body?.value ?? req.body?.enabled)); }
     catch (error) { return handleError(res, error); }
   },
+  listAnnouncements(_req, res) {
+    try { return res.json(adminService.listAnnouncements()); } catch (error) { return handleError(res, error); }
+  },
+  createAnnouncement(req, res) {
+    try { return res.status(201).json(adminService.createAnnouncement(req.user.id, req.body || {})); }
+    catch (error) { return handleError(res, error); }
+  },
+  updateAnnouncement(req, res) {
+    try { return res.json(adminService.updateAnnouncement(req.user.id, req.params.id, req.body || {})); }
+    catch (error) { return handleError(res, error); }
+  },
+  deleteAnnouncement(req, res) {
+    try { adminService.deleteAnnouncement(req.user.id, req.params.id); return res.status(204).end(); }
+    catch (error) { return handleError(res, error); }
+  },
 };

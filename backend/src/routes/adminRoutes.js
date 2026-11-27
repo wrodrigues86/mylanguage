@@ -14,5 +14,9 @@ router.get('/assistant', assistantController.adminConfig);
 router.patch('/assistant', assistantController.updateAdminConfig);
 router.post('/assistant/test-chat', assistantController.testChat);
 router.patch('/settings/:key', adminController.updateSetting);
+router.get('/announcements', adminController.listAnnouncements);
+router.post('/announcements', adminController.createAnnouncement);
+router.patch('/announcements/:id', adminController.updateAnnouncement);
+router.delete('/announcements/:id', adminController.deleteAnnouncement);
 
 export default router;

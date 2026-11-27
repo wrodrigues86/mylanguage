@@ -11,7 +11,7 @@ api.interceptors.request.use(config => {
 
 const steps = ['Boas-vindas', 'Seu idioma', 'Primeiro aprendizado', 'Seu primeiro cartão'];
 
-export default function Onboarding({ userName, onComplete }) {
+export default function Onboarding({ userName, onComplete, siteName = 'MyLingua' }) {
   const [step, setStep] = useState(0);
   const [language, setLanguage] = useState(null);
   const [learning, setLearning] = useState(null);
@@ -31,7 +31,7 @@ export default function Onboarding({ userName, onComplete }) {
   async function submitLearning(event) {
     event.preventDefault(); setBusy(true); setError('');
     const form = new FormData(event.currentTarget);
-    const payload = { title: form.get('title'), translation: form.get('translation'), example: form.get('example'), language_id: language?.id || null };
+    const payload = { title: form.get('title'), translation: form.get('translation'), pronunciation: form.get('pronunciation'), example: form.get('example'), language_id: language?.id || null };
     try {
       const { data } = await api.post('/learnings', payload);
       setLearning(data); setStep(3);
@@ -43,7 +43,7 @@ export default function Onboarding({ userName, onComplete }) {
     if (!learning?.translation) { onComplete(); return; }
     setBusy(true); setError('');
     try {
-      await api.post('/flashcards', { front: learning.title, back: learning.translation, learning_id: learning.id });
+      await api.post('/flashcards', { front: learning.title, front_pronunciation: learning.pronunciation, back: learning.translation, learning_id: learning.id });
       onComplete();
     } catch (err) { setError(err.response?.data?.error || 'Não foi possível criar o flashcard.'); }
     finally { setBusy(false); }
@@ -51,7 +51,7 @@ export default function Onboarding({ userName, onComplete }) {
 
   return <main className="onboarding-page">
     <a className="skip-link" href="#onboarding-content">Pular para configuração</a>
-    <header className="onboarding-header"><a className="brand" href="/"><span className="brand-mark" aria-hidden="true">m</span><span>mylingua<span className="brand-period">.</span></span></a><button className="onboarding-skip" onClick={onComplete}>Configurar depois</button></header>
+    <header className="onboarding-header"><a className="brand" href="/"><span className="brand-mark" aria-hidden="true">{Array.from(siteName.trim())[0]?.toLowerCase() || 'm'}</span><span>{siteName}<span className="brand-period">.</span></span></a><button className="onboarding-skip" onClick={onComplete}>Configurar depois</button></header>
     <section id="onboarding-content" className="onboarding-card" aria-labelledby="onboarding-title" tabIndex="-1">
       <div className="onboarding-progress" aria-label={`Etapa ${step + 1} de ${steps.length}`} aria-live="polite">
         {steps.map((label, index) => <div className={`onboarding-progress-step ${index <= step ? 'is-active' : ''}`} key={label}><span aria-hidden="true">{index < step ? '✓' : index + 1}</span><small>{label}</small></div>)}
@@ -74,6 +74,7 @@ export default function Onboarding({ userName, onComplete }) {
       {step === 2 && <form className="onboarding-body" onSubmit={submitLearning}>
         <div className="eyebrow">ETAPA 2 · PRIMEIRA DESCOBERTA</div><h1 id="onboarding-title">O que você quer lembrar?</h1><p>Comece com uma palavra, frase ou expressão em {language?.name}.</p>
         <label className="onboarding-field">Palavra ou expressão<input className="form-control" name="title" autoFocus required placeholder="Ex.: uma palavra que aprendeu hoje"/></label>
+        <label className="onboarding-field">Pronúncia <span className="optional-label">Opcional</span><input className="form-control" name="pronunciation" placeholder="Ex.: Kon'nichiwa"/></label>
         <label className="onboarding-field">Tradução ou significado<input className="form-control" name="translation" placeholder="O que significa?"/></label>
         <label className="onboarding-field">Exemplo de uso <span className="optional-label">Opcional</span><textarea className="form-control" name="example" rows="2" placeholder="Uma frase para ajudar a lembrar"/></label>
         <div className="onboarding-actions"><button type="button" className="btn-soft" onClick={() => setStep(1)}>Voltar</button><button className="btn-primary-custom" disabled={busy}>{busy ? 'Salvando…' : 'Salvar aprendizado'} <span aria-hidden="true">→</span></button></div>
