@@ -3,15 +3,15 @@ services:
     build:
       context: .
       dockerfile: backend/Dockerfile
+
+    env_file:
+    - ./backend/.env
+    
     environment:
       NODE_ENV: production
       PORT: 3001
       DATABASE_PATH: /app/data/mylingua.db
       FRONTEND_URL: http://localhost:8081
-      JWT_SECRET: ${JWT_SECRET}
-      ADMIN_NAME: ${ADMIN_NAME}
-      ADMIN_EMAIL: ${ADMIN_EMAIL}
-      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
     volumes:
       - mylingua-data:/app/data
     restart: unless-stopped
